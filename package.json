@@ -11,9 +11,11 @@
     "build/**/*"
   ],
   "scripts": {
-    "build": "tsc && chmod +x build/index.js",
+    "build": "tsc && node -e \"if (process.platform !== 'win32') require('node:fs').chmodSync('build/index.js', 0o755)\"",
     "start": "node build/index.js",
+    "start:streamable-http": "node --input-type=module -e \"process.env.TRANSPORT = 'streamable-http'; process.env.PORT = process.env.PORT ?? '3000'; await import('./build/index.js');\"",
     "mcp-start": "npm run build && npm run start",
+    "mcp-start:streamable-http": "npm run build && npm run start:streamable-http",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
@@ -26,7 +28,7 @@
   "author": "Aha! (https://www.aha.io)",
   "license": "ISC",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.8.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "graphql": "^16.0.0",
     "graphql-request": "^6.0.0"
   },

@@ -45,6 +45,20 @@ This MCP server requires the following environment variables:
 
 - `AHA_API_TOKEN`: Your Aha! API token
 - `AHA_DOMAIN`: Your Aha! domain (e.g., yourcompany if you access aha at yourcompany.aha.io)
+- `TRANSPORT` (optional): Transport type (`stdio` or `streamable-http`). Defaults to `stdio`
+- `PORT` (optional): Port for streamable HTTP transport. Defaults to `3000`
+
+## Running with Streamable HTTP
+
+To run this server in streamable HTTP mode:
+
+```bash
+TRANSPORT=streamable-http PORT=3000 npm run mcp-start
+```
+
+In streamable HTTP mode, the MCP endpoint is:
+
+`http://localhost:3000/mcp`
 
 ## IDE Integration
 
@@ -256,8 +270,8 @@ Searches for Aha! documents.
 | `AHA_API_TOKEN` | Your Aha! API token                         | Required |
 | `AHA_DOMAIN`    | Your Aha! domain (e.g., yourcompany.aha.io) | Required |
 | `LOG_LEVEL`     | Logging level (debug, info, warn, error)    | info     |
-| `PORT`          | Port for SSE transport                      | 3000     |
-| `TRANSPORT`     | Transport type (stdio or sse)               | stdio    |
+| `PORT`          | Port for streamable HTTP transport           | 3000     |
+| `TRANSPORT`     | Transport type (stdio or streamable-http)   | stdio    |
 
 ## Troubleshooting
 
