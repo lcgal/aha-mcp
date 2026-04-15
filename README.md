@@ -60,6 +60,60 @@ In streamable HTTP mode, the MCP endpoint is:
 
 `http://localhost:3000/mcp`
 
+## Exposing Through IIS
+
+To expose the streamable HTTP endpoint publicly on Windows, run this server behind IIS as a reverse proxy.
+
+### Recommended setup
+
+1. Run the Node.js server locally on port `3000` using streamable HTTP mode.
+2. Use IIS to terminate HTTPS and proxy `/mcp` to `http://127.0.0.1:3000/mcp`.
+3. Do not expose port `3000` directly to the internet.
+
+### Run the server
+
+On Windows PowerShell:
+
+```powershell
+$env:AHA_API_TOKEN="your_token"
+$env:AHA_DOMAIN="yourcompany"
+npm run mcp-start:streamable-http
+```
+
+### IIS prerequisites
+
+Install the following IIS modules:
+
+- URL Rewrite
+- Application Request Routing (ARR)
+
+Then enable proxying in IIS:
+
+1. Open IIS Manager.
+2. Select the server node.
+3. Open `Application Request Routing Cache`.
+4. Select `Server Proxy Settings`.
+5. Enable `Proxy`.
+
+### IIS site configuration
+
+1. Create or reuse an IIS site bound to your public hostname.
+2. Add an HTTPS binding with a valid certificate.
+3. Deploy the included [web.config](web.config) to the IIS site root.
+
+The included configuration:
+
+- Redirects HTTP to HTTPS
+- Proxies `/mcp` to `http://127.0.0.1:3000/mcp`
+- Allows `GET`, `POST`, `DELETE`, and `OPTIONS`
+- Disables IIS compression to avoid interfering with streaming responses
+
+### Notes
+
+- Streamable HTTP uses multiple HTTP verbs on `/mcp`, so IIS must allow them.
+- If you change the local application port, update [web.config](web.config) accordingly.
+- If you run the Node.js process as a Windows service, ensure the service has access to `AHA_API_TOKEN` and `AHA_DOMAIN`.
+
 ## IDE Integration
 
 For security reasons, we recommend using your preferred secure method for managing environment variables rather than storing API tokens directly in editor configurations. Each editor has different security models and capabilities for handling sensitive information.
